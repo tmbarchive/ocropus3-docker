@@ -41,11 +41,16 @@ RUN conda install scikit-learn
 RUN conda install redis
 RUN conda install Pillow
 RUN conda install pytorch=0.3.1 torchvision cuda90 -c pytorch
+RUN conda install msgpack
 
 RUN conda install -c conda-forge google-cloud-storage
 
 RUN conda install pip \
     && ln -s /opt/conda/bin/pip /usr/bin/pip
+
+RUN conda install cython
+
+RUN echo update date
 
 RUN pip install git+git://github.com/NVLabs/dlinputs
 RUN pip install git+git://github.com/NVLabs/dltrainers
