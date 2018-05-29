@@ -27,3 +27,19 @@ You can view the training progress by connecting using VNC:
     xtightvncviewer :99
 
 Models are saved in the current directory by default.
+
+Line Recognition
+================
+
+Train a model with:
+
+    ./ocropy ocroline-train -d http://storage.googleapis.com/lpr-ocr/uw3-dew-training.tgz
+
+Models will be saved in the current directory.
+
+You can view the training progress by connecting using VNC:
+
+    xtightvncviewer :99
+
+Models are saved in the current directory by default.
+
