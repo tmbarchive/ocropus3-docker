@@ -13,6 +13,12 @@ to PyTorch 0.4.
 You probably should set a Jupyter password (see `jupyter_config/README`) and
 a VNC password (see `vnc_config/README`).
 
+To clone this repository, use the `--recursive` flag:
+
+    git clone --recursive git@github.com:tmbdev/ocropus3-docker.git
+    cd ocropus3-docker
+    ./build
+
 Segmentation
 ============
 
