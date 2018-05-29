@@ -21,6 +21,7 @@ RUN apt-get -y install wget tightvncserver tmux rxvt \
 
 RUN apt-get install -y nginx
 RUN apt-get install -y nginx-extras
+RUN apt-get install -y cadaver
 
 RUN cd /tmp \
     && wget --quiet -nd https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh \
@@ -34,6 +35,7 @@ RUN conda install git
 RUN conda install numpy
 RUN conda install scipy
 RUN conda install msgpack
+RUN conda install simplejson
 RUN conda install pyzmq
 RUN conda install jupyter
 RUN conda install scikit-image
@@ -42,29 +44,33 @@ RUN conda install redis
 RUN conda install Pillow
 RUN conda install pytorch=0.3.1 torchvision cuda90 -c pytorch
 RUN conda install msgpack
-
 RUN conda install -c conda-forge google-cloud-storage
+RUN conda install cython
 
 RUN conda install pip \
     && ln -s /opt/conda/bin/pip /usr/bin/pip
+RUN conda install setuptools
 
-RUN conda install cython
+ENV PATH /opt/conda/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-RUN echo update date
-
-RUN pip install git+git://github.com/NVLabs/dlinputs
-RUN pip install git+git://github.com/NVLabs/dltrainers
-RUN pip install git+git://github.com/NVLabs/dlmodels
-RUN pip install git+git://github.com/tmbdev/cctc
-RUN pip install git+git://github.com/NVLabs/ocrobin
-RUN pip install git+git://github.com/NVLabs/ocrodeg
-RUN pip install git+git://github.com/NVLabs/ocroline
-RUN pip install git+git://github.com/NVLabs/ocrorot
-RUN pip install git+git://github.com/NVLabs/ocroseg
-
-RUN conda install simplejson
-
-RUN apt-get install -y cadaver
+COPY dlinputs /tmp/dlinputs
+RUN cd /tmp/dlinputs && python setup.py install && rm -rf /tmp/dlinputs
+COPY dltrainers /tmp/dltrainers
+RUN cd /tmp/dltrainers && python setup.py install && rm -rf /tmp/dltrainers
+COPY dlmodels /tmp/dlmodels
+RUN cd /tmp/dlmodels && python setup.py install && rm -rf /tmp/dlmodels
+COPY cctc /tmp/cctc
+RUN cd /tmp/cctc && python setup.py install && rm -rf /tmp/cctc
+COPY ocrobin /tmp/ocrobin
+RUN cd /tmp/ocrobin && python setup.py install && rm -rf /tmp/ocrobin
+COPY ocrodeg /tmp/ocrodeg
+RUN cd /tmp/ocrodeg && python setup.py install && rm -rf /tmp/ocrodeg
+COPY ocroline /tmp/ocroline
+RUN cd /tmp/ocroline && python setup.py install && rm -rf /tmp/ocroline
+COPY ocrorot /tmp/ocrorot
+RUN cd /tmp/ocrorot && python setup.py install && rm -rf /tmp/ocrorot
+COPY ocroseg /tmp/ocroseg
+RUN cd /tmp/ocroseg && python setup.py install && rm -rf /tmp/ocroseg
 
 ENV USER user
 ENV HOME /home/$USER
@@ -74,7 +80,6 @@ ENV UID 1000
 ENV TERM xterm
 ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64
 ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
-ENV PATH /opt/conda/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 COPY nginx.conf /etc/nginx
 EXPOSE 3218

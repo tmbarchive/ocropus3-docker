@@ -1,0 +1,27 @@
+[submodule "dlinputs"]
+	path = dlinputs
+	url = https://github.com/NVLabs/dlinputs
+[submodule "dltrainers"]
+	path = dltrainers
+	url = https://github.com/NVLabs/dltrainers
+[submodule "dlmodels"]
+	path = dlmodels
+	url = https://github.com/NVLabs/dlmodels
+[submodule "cctc"]
+	path = cctc
+	url = https://github.com/tmbdev/cctc
+[submodule "ocrobin"]
+	path = ocrobin
+	url = https://github.com/NVLabs/ocrobin
+[submodule "ocrodeg"]
+	path = ocrodeg
+	url = https://github.com/NVLabs/ocrodeg
+[submodule "ocroline"]
+	path = ocroline
+	url = https://github.com/NVLabs/ocroline
+[submodule "ocrorot"]
+	path = ocrorot
+	url = https://github.com/NVLabs/ocrorot
+[submodule "ocroseg"]
+	path = ocroseg
+	url = https://github.com/NVLabs/ocroseg
