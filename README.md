@@ -33,7 +33,8 @@ Line Recognition
 
 Train a model with:
 
-    ./ocropy ocroline-train -d http://storage.googleapis.com/lpr-ocr/uw3-dew-training.tgz
+    ./ocropy ocroline-train -d http://storage.googleapis.com/lpr-ocr/uw3-dew-training.tgz \
+            -t http://storage.googleapis.com/lpr-ocr/uw3-dew-testing.tgz
 
 Models will be saved in the current directory.
 
