@@ -10,7 +10,7 @@ Docker container for running OCRopus commands. This bundles up:
 PyTorch is currently at version 0.3.1, since OCRopus hasn't been converted yet
 to PyTorch 0.4.
 
-You probably should set a Jupyter password (see `jupyter_config/README`) and
+You need to set a Jupyter password (see `jupyter_config/README`) and
 a VNC password (see `vnc_config/README`).
 
 To clone this repository, use the `--recursive` flag:

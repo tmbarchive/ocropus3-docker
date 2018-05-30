@@ -1,5 +1,25 @@
 #!/bin/bash
-test -f vnc_config/passwd || echo "you should set a VNC password (see vnc_config/README)"
-test -f jupyter_config/jupyter_notebook_config.json || echo "you should set a Jupyter password (see jupyter_config/README)"
-test -f jupyter_config/mykey.key || echo "you should configure an SSL key (see jupyter_config/README)"
+
+echo
+test -f jupyter_config/jupyter_notebook_config.json || (
+    cd jupyter_config
+    echo Please enter a password you can use to access container-based Jupyter notebooks.
+    jupyter notebook password --config=./jupyter_notebook_config.json || \
+        echo Please install "jupyter" on your machine to set the jupyter password.
+)
+
+echo
+test -f vnc_config/passwd || (
+    cd vnc_config
+    echo Please enter a password for the container-based VNC server.
+    vncpasswd passwd
+)
+
+echo
+test -f jupyter_config/mykey.key || (
+    cd jupyter_config
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout mykey.key -out mycert.pem -subj "/C=US/ST=CA/L=Somewhere/O=OCRopus/OU=$(hostname)/CN=$(whoami)"
+)
+
+echo
 docker build -t ocropy .
