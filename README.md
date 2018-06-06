@@ -24,7 +24,7 @@ Segmentation
 
 Train a model with:
 
-    ./ocropy ocroseg-train -d http://storage.googleapis.com/lpr-ocr/uw3-lines-framed.tgz
+    ./ocropy ocroseg-train -d http://storage.googleapis.com/lpr-ocr/uw3-framed-lines.tgz
 
 Models will be saved in the current directory.
 
