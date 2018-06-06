@@ -1,0 +1,7 @@
+#!/bin/bash
+
+exec nvidia-docker run \
+    -v ${DATA_CACHE:-$HOME/CACHE}:/cache \
+    -p 3128:3128 \
+    --entrypoint /usr/bin/sudo \
+    ocropy nginx -g 'daemon off;'
