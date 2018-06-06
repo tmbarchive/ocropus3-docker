@@ -28,6 +28,7 @@ RUN cd /tmp \
     && bash ./Miniconda2-latest-Linux-x86_64.sh -b -p /opt/conda \
     && ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh \
     && ln -s /opt/conda/bin/conda /usr/bin/conda
+    && rm -f Miniconda*.sh
 
 RUN apt-get install -y redis-tools
 

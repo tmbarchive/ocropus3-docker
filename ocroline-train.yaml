@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ocroline-train
+spec:
+  template:
+    spec:
+      containers:
+      - name: ocroline-train
+        image: gcr.io/research-191823/ocropy
+        workingDir: "/tmp"
+        command: ["/usr/local/bin/runcmd"]
+        args:
+        - ocroline-train
+        - "-d"
+        - "http://storage.googleapis.com/lpr-ocr/uw3-dew-training.tgz"
+        - "-t"
+        - "http://storage.googleapis.com/lpr-ocr/uw3-dew-testing.tgz"
+        - "-o"
+        - "ol"
+        resources:
+          requests:
+          limits:
+            nvidia.com/gpu: "1"
+            cpu: 12
+            memory: "48000Mi"
+      nodeSelector:
+        cloud.google.com/gke-accelerator: nvidia-tesla-p100
+      restartPolicy: Never
+  backoffLimit: 4

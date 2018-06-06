@@ -1,0 +1,8 @@
+cluster=mycluster
+zone=us-central1-f
+project=myproject
+image=gcr.io/$project/ocropy
+cpu_machine=n1-standard-8
+cpu_nodes=3
+gpu_machine=n1-standard-16
+gpu_nodes=2

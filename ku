@@ -1,0 +1,95 @@
+#!/bin/bash
+
+set -a
+. ./Config.sh
+set +a
+
+cmd_init() { # initialize the cluster
+    set -e
+    gcloud config set project $project
+    gcloud config set compute/zone $zone
+    gcloud config set container/new_scopes_behavior true
+    gcloud config set container/use_v1_api true
+    gcloud config set container/cluster $cluster
+    gcloud beta container clusters create $cluster \
+        --zone $zone --cluster-version 1.9 \
+        --machine-type ${cpu_machine:-n1-standard-8} \
+        --enable-autorepair \
+        --num-nodes ${cpu_nodes:-3}
+        # --enable-autoscaling --min-nodes 4 --max-nodes 20 
+    gcloud beta container node-pools create p100 \
+        --accelerator type=nvidia-tesla-p100,count=1 \
+        --machine-type ${gpu_machine:-n1-standard-16} \
+        --cluster $cluster \
+        --zone $zone \
+        --node-labels=gpu=p100 \
+        --num-nodes ${gpu_nodes:-2}
+        # --enable-autoscaling --num-nodes 3 --min-nodes 2 --max-nodes 5
+    gcloud container clusters get-credentials $cluster
+    gcloud container clusters list
+    sleep 180
+    cmd_daemonset
+}
+
+cmd_daemonset() { # start the NVIDIA daemonset
+    kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/container-engine-accelerators/stable/nvidia-driver-installer/cos/daemonset-preloaded.yaml
+}
+
+cmd_status() { # cluster status
+    gcloud container clusters list
+    gcloud container node-pools list --cluster $cluster
+}
+
+cmd_pods() { # node list
+    kubectl get pods -a
+}
+
+cmd_stats() { # node stats
+    gcloud container clusters list
+    echo
+    kubectl get services
+    echo
+    kubectl get pods -a | awk '!/STATUS/{sub("-[a-z0-9]*$", "", $1); print $1, $3}' | sort | uniq -c
+}
+
+cmd_build() { # build the cloud image
+    gcloud container builds submit --tag $image --timeout=3600 .
+}
+
+cmd_kill() { # kill the cluster
+    yes | gcloud container clusters delete $cluster
+}
+
+cmd_connect() { # connect to a cluster
+    target="$1"
+    shift
+    match=$(kubectl get pods | awk "/$target/"'{print $1; exit}')
+    if test "$match" != ""; then
+        echo "connecting to: $match"
+        kubectl exec -ti $match "${@:-/bin/bash}"
+    else
+        echo "$target: not found"
+    fi
+}
+
+cmd_forward() { # connect to a cluster
+    target="$1"
+    shift
+    match=$(kubectl get pods | awk "/$target/"'{print $1; exit}')
+    if test "$match" != ""; then
+        echo "forwarding to: $match"
+        kubectl port-forward "$match" "$@"
+    else
+        echo "$target: not found"
+    fi
+}
+
+cmd_help() { # display this help
+    sed '/^cmd_.*{/!d;s/^cmd_//;s/() *{ *# */ -- /' $0
+}
+
+
+cmd="$1"
+shift
+eval cmd_$cmd "$@"
+

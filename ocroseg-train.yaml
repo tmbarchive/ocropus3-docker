@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ocroseg-train
+spec:
+  template:
+    spec:
+      containers:
+      - name: ocroseg-train
+        image: gcr.io/research-191823/ocropy
+        workingDir: "/tmp"
+        command: ["/usr/local/bin/runcmd"]
+        args:
+        - ocroseg-train
+        - "-d"
+        - "http://storage.googleapis.com/lpr-ocr/uw3-framed-lines.tgz"
+        - "-o"
+        - "ocroseg"
+        resources:
+          requests:
+          limits:
+            nvidia.com/gpu: "1"
+            cpu: 12
+            memory: "48000Mi"
+      nodeSelector:
+        cloud.google.com/gke-accelerator: nvidia-tesla-p100
+      restartPolicy: Never
+  backoffLimit: 4
