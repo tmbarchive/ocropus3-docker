@@ -101,22 +101,3 @@ RUN echo 'user ALL=(ALL:ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 USER $UID
 ENTRYPOINT ["runcmd"]
-
-#CMD /opt/conda/bin/jupyter notebook --allow-root --certfile=$HOME/.jupyter/mycert.pem --keyfile $HOME/.jupyter/mykey.key --port 8888 --no-browser --ip=*
-# ENTRYPOINT /opt/conda/bin/ipython
-
-#
-#RUN pip install --upgrade jupyterlab && jupyter serverextension enable --py jupyterlab --sys-prefix
-#RUN pip install --upgrade dask dask[complete] distributed
-#RUN pip install --upgrade google-cloud-storage
-#RUN pip install --upgrade youtube-dl
-#
-##RUN pip install http://download.pytorch.org/whl/cu91/torch-0.3.1-cp27-cp27mu-linux_x86_64.whl
-#RUN pip install http://download.pytorch.org/whl/cu90/torch-0.3.1-cp27-cp27mu-linux_x86_64.whl
-#RUN pip install torchvision
-## RUN apt-get install -y netcat-openbsd
-#RUN apt-get install -y netcat-traditional
-#RUN apt-get install -y redis-tools
-#RUN apt-get install -y webfs
-#RUN apt-get install -y iperf3 iozone3
-#
