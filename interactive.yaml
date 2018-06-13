@@ -2,12 +2,12 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: ocropy-interactive
+  name: interactive
   labels:
-    app: ocropy-interactive
+    app: interactive
 spec:
   containers:
-  - name: ocropy-interactive
+  - name: interactive
     image: gcr.io/research-191823/ocropy
     command: ["/usr/local/bin/runcmd"]
     args:

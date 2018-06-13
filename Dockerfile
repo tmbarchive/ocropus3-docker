@@ -1,19 +1,22 @@
 FROM nvidia/cuda:9.0-base
 #FROM nvidia/cuda:9.1-base
 #FROM nvidia/cuda:9.2-devel-ubuntu18.04
+#FROM nvidia/cuda:9.0-devel-ubuntu18.04
 MAINTAINER Tom Breuel <tmbdev@gmail.com>
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
 
-RUN apt-get -y update
+RUN apt-get -y update && apt-get dist-upgrade -y
 
 RUN  apt-get -y install sudo lsb-release build-essential curl software-properties-common \
     && echo "deb http://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -c -s) main" \
            >> /etc/apt/sources.list.d/google-cloud-sdk.list \
-    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key  add - \
-    && apt-get update -y && apt-get dist-upgrade -y && apt-get -y install apt-utils \
-    && apt-get -y install locales && locale-gen en_US.UTF-8 && dpkg-reconfigure locales
+    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
+    && apt-get update -y && apt-get dist-upgrade -y && apt-get -y install apt-utils
+
+RUN apt-get -y install locales && locale-gen en_US.UTF-8 && dpkg-reconfigure locales \
+    && apt-get -y install google-cloud-sdk
 
 RUN apt-get -y install wget tightvncserver tmux rxvt \
     xterm mlterm imagemagick firefox blackbox imagemagick \

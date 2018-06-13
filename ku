@@ -2,6 +2,7 @@
 
 set -a
 . ./Config.sh
+scopes=default,storage-rw,compute-ro
 set +a
 
 cmd_init() { # initialize the cluster
@@ -15,16 +16,18 @@ cmd_init() { # initialize the cluster
         --zone $zone --cluster-version 1.9 \
         --machine-type ${cpu_machine:-n1-standard-8} \
         --enable-autorepair \
-        --num-nodes ${cpu_nodes:-3}
-        # --enable-autoscaling --min-nodes 4 --max-nodes 20 
+        --scopes $scopes \
+        --num-nodes ${cpu_nodes:-3} \
+        --enable-autoscaling --min-nodes 4 --max-nodes 30
     gcloud beta container node-pools create p100 \
         --accelerator type=nvidia-tesla-p100,count=1 \
         --machine-type ${gpu_machine:-n1-standard-16} \
         --cluster $cluster \
         --zone $zone \
         --node-labels=gpu=p100 \
-        --num-nodes ${gpu_nodes:-2}
-        # --enable-autoscaling --num-nodes 3 --min-nodes 2 --max-nodes 5
+        --scopes $scopes \
+        --num_nodes ${gpu_nodes:-2} \
+        --enable-autoscaling --min-nodes 2 --max-nodes 5
     gcloud container clusters get-credentials $cluster
     gcloud container clusters list
     sleep 180
@@ -60,28 +63,34 @@ cmd_kill() { # kill the cluster
     yes | gcloud container clusters delete $cluster
 }
 
-cmd_connect() { # connect to a cluster
-    target="$1"
-    shift
-    match=$(kubectl get pods | awk "/$target/"'{print $1; exit}')
-    if test "$match" != ""; then
-        echo "connecting to: $match"
-        kubectl exec -ti $match "${@:-/bin/bash}"
-    else
-        echo "$target: not found"
+getpod() {
+    match=$(kubectl get pods --show-all | awk "/$1/"'{print $1; exit}')
+    if test "$match" == ""; then
+        echo "$1: not found" 1>&2
+        exit 99
     fi
+    echo "$match" 1>&2
+    echo "$match"
+}
+
+cmd_run() { # connect to a cluster
+    target=$1
+    shift
+    kubectl exec -ti $(getpod $target) "${@:-/bin/bash}"
 }
 
 cmd_forward() { # connect to a cluster
     target="$1"
     shift
-    match=$(kubectl get pods | awk "/$target/"'{print $1; exit}')
-    if test "$match" != ""; then
-        echo "forwarding to: $match"
-        kubectl port-forward "$match" "$@"
-    else
-        echo "$target: not found"
-    fi
+    match=$(getpod $target)
+    kubectl port-forward "$match" "$@"
+}
+
+cmd_log() { # print log
+    target="$1"
+    shift
+    match=$(getpod $target)
+    kubectl log "$match"
 }
 
 cmd_help() { # display this help

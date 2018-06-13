@@ -18,6 +18,8 @@ spec:
         - "http://storage.googleapis.com/lpr-ocr/uw3-dew-testing.tgz"
         - "-o"
         - "ol"
+        - "--sync"
+        - "gsutil cp '{fname}' 'gs://lpr-ocrmodels/{fname}'"
         resources:
           requests:
           limits:

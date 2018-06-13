@@ -15,7 +15,9 @@ spec:
         - "-d"
         - "http://storage.googleapis.com/lpr-ocr/uw3-framed-lines.tgz"
         - "-o"
-        - "ocroseg"
+        - "os"
+        - "--sync"
+        - "gsutil cp '{fname}' 'gs://lpr-ocrmodels/{fname}'"
         resources:
           requests:
           limits:
