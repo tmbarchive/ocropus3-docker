@@ -90,7 +90,7 @@ cmd_log() { # print log
     target="$1"
     shift
     match=$(getpod $target)
-    kubectl log "$match"
+    kubectl logs "$match"
 }
 
 cmd_help() { # display this help
