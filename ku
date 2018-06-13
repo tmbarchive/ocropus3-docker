@@ -26,7 +26,7 @@ cmd_init() { # initialize the cluster
         --zone $zone \
         --node-labels=gpu=p100 \
         --scopes $scopes \
-        --num_nodes ${gpu_nodes:-2} \
+        --num-nodes ${gpu_nodes:-2} \
         --enable-autoscaling --min-nodes 2 --max-nodes 5
     gcloud container clusters get-credentials $cluster
     gcloud container clusters list
