@@ -56,6 +56,7 @@ cmd_stats() { # node stats
 }
 
 cmd_build() { # build the cloud image
+    git submodule update --remote --merge
     gcloud container builds submit --tag $image --timeout=3600 .
 }
 

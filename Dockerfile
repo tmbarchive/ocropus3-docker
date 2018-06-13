@@ -52,8 +52,8 @@ RUN conda install -c conda-forge google-cloud-storage
 RUN conda install cython
 RUN conda install -c auto editdistance
 
-RUN conda install pip \
-    && ln -s /opt/conda/bin/pip /usr/bin/pip
+RUN conda install -c menpo opencv3
+RUN conda install pip && ln -s /opt/conda/bin/pip /usr/bin/pip
 RUN conda install setuptools
 
 ENV PATH /opt/conda/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
