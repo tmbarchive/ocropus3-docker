@@ -8,16 +8,21 @@ metadata:
 spec:
   containers:
   - name: interactive
-    image: gcr.io/research-191823/ocropy
-    command: ["/usr/local/bin/runcmd"]
+    image: gcr.io/$project/ocropy
+
+    command: ["/bin/bash"]
     args:
-    - sleep
-    - "1000000"
+    - "-c"
+    - |
+      daemon -n vnc -- tightvncserver -geometry 1600x900 :99
+      export DISPLAY=:99
+      sleep 1000000
     resources:
       requests:
       limits:
         nvidia.com/gpu: "1"
-        cpu: "8"
-        memory: "16384Mi"
+        cpu: "6"
+        memory: "8192Mi"
   nodeSelector:
-    cloud.google.com/gke-accelerator: nvidia-tesla-p100
+    cloud.google.com/gke-accelerator: nvidia-tesla-k80
+

@@ -2,12 +2,27 @@
 
 test -d ./data || mkdir data
 
+mounts="-v $(pwd):/work"
+home="/home/user"
+
+dir="$HOME/.juypter"
+if test -d $dir; then
+    mounts="$mounts -v $dir:$home/.jupyter"
+fi
+dir="$HOME/.vnc"
+if test -d $dir; then
+    mounts="$mounts -v $dir:$home/.vnc"
+fi
+if test -d ${DATA_CACHE:-$HOME/CACHE}; then
+    mounts="$mounts -v ${DATA_CACHE:-$HOME/CACHE}:/cache"
+fi
+if test -d /data1; then
+    mounts="$mounts -v /data1:/data1"
+fi
+
 exec nvidia-docker run \
-    -v $(pwd):/work \
-    -v $(pwd)/data:/data \
-    -v ${DATA_CACHE:-$HOME/CACHE}:/cache \
+    $mounts \
     -w /work \
-    -e DATA_PROXY="$DATA_PROXY" \
     --net host \
     -p 3128:3128 \
     -p 5999:5999 \

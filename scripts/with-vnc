@@ -1,0 +1,7 @@
+#!/bin/bash
+
+daemon -n vnc -- tightvncserver -geometry 1600x900 :99
+export DISPLAY=:99
+
+set -x
+"$@"
